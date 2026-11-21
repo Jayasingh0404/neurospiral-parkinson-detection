@@ -11,7 +11,7 @@ import {
   HelpCircle,
   ArrowRight
 } from 'lucide-react';
-import { fetchMetrics } from '../services/api';
+import { fetchMetrics, API_ORIGIN } from '../services/api';
 import { MetricsData, ModelMetrics } from '../types';
 
 export const ComparisonPage: React.FC = () => {
@@ -112,7 +112,7 @@ export const ComparisonPage: React.FC = () => {
         </h3>
         <div className="flex items-center justify-center p-2 bg-slate-950/60 rounded-2xl border border-slate-800">
           <img 
-            src="/static/evaluation/01_grouped_metrics_bar.png" 
+            src={`${API_ORIGIN}/static/evaluation/01_grouped_metrics_bar.png`} 
             alt="Grouped Metrics Bar Chart" 
             className="max-h-[450px] w-auto rounded-lg shadow-lg"
             onError={(e) => { (e.target as any).style.display = 'none'; }}

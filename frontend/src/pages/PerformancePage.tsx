@@ -10,7 +10,7 @@ import {
   XCircle,
   HelpCircle
 } from 'lucide-react';
-import { fetchMetrics } from '../services/api';
+import { fetchMetrics, API_ORIGIN } from '../services/api';
 import { MetricsData, ModelMetrics } from '../types';
 
 export const PerformancePage: React.FC = () => {
@@ -185,7 +185,7 @@ export const PerformancePage: React.FC = () => {
         <div className="flex items-center justify-center p-4 bg-slate-950/60 rounded-2xl border border-slate-800">
           {activeCurveTab === 'roc' && (
             <img 
-              src="/static/evaluation/03_roc_curves.png" 
+              src={`${API_ORIGIN}/static/evaluation/03_roc_curves.png`}
               alt="ROC Curves" 
               className="max-h-[500px] w-auto rounded-lg shadow-lg"
               onError={(e) => { (e.target as any).style.display = 'none'; }}
@@ -193,7 +193,7 @@ export const PerformancePage: React.FC = () => {
           )}
           {activeCurveTab === 'pr' && (
             <img 
-              src="/static/evaluation/04_precision_recall_curves.png" 
+              src={`${API_ORIGIN}/static/evaluation/04_precision_recall_curves.png`}
               alt="Precision Recall Curves" 
               className="max-h-[500px] w-auto rounded-lg shadow-lg"
               onError={(e) => { (e.target as any).style.display = 'none'; }}
@@ -201,7 +201,7 @@ export const PerformancePage: React.FC = () => {
           )}
           {activeCurveTab === 'cm' && (
             <img 
-              src="/static/evaluation/02_confusion_matrices.png" 
+              src={`${API_ORIGIN}/static/evaluation/02_confusion_matrices.png`}
               alt="Confusion Matrices" 
               className="max-h-[500px] w-auto rounded-lg shadow-lg"
               onError={(e) => { (e.target as any).style.display = 'none'; }}
@@ -209,7 +209,7 @@ export const PerformancePage: React.FC = () => {
           )}
           {activeCurveTab === 'curves' && (
             <img 
-              src="/static/evaluation/05_training_curves.png" 
+              src={`${API_ORIGIN}/static/evaluation/05_training_curves.png`}
               alt="Training and Validation Curves" 
               className="max-h-[500px] w-auto rounded-lg shadow-lg"
               onError={(e) => { (e.target as any).style.display = 'none'; }}
