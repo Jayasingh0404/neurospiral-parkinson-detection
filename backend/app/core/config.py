@@ -5,31 +5,33 @@ Backend Application Configuration Settings.
 import os
 from pydantic import BaseModel
 
+_RESOLVED_BASE_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
+
 
 class Settings(BaseModel):
-    PROJECT_NAME: str = "Parkinson's Disease Spiral Classification & Explainability API"
+    PROJECT_NAME: str = "NeuroSpiral AI — Parkinson's Disease Classification API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
-    
-    BASE_DIR: str = "/Users/jayasinghrajput/PARKINSON"
-    ARTIFACTS_DIR: str = "/Users/jayasinghrajput/PARKINSON/ml/artifacts"
-    EDA_DIR: str = "/Users/jayasinghrajput/PARKINSON/ml/outputs/eda"
-    EVAL_DIR: str = "/Users/jayasinghrajput/PARKINSON/ml/outputs/evaluation"
-    EXPLAIN_DIR: str = "/Users/jayasinghrajput/PARKINSON/ml/outputs/explainability"
-    
+
+    BASE_DIR: str = _RESOLVED_BASE_DIR
+    ARTIFACTS_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "artifacts")
+    EDA_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "eda")
+    EVAL_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "evaluation")
+    EXPLAIN_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "explainability")
+
     ALLOWED_IMAGE_TYPES: list = ["image/jpeg", "image/png", "image/jpg"]
     MAX_UPLOAD_SIZE_BYTES: int = 10 * 1024 * 1024  # 10 MB
-    
-    DEFAULT_MODEL: str = "custom_cnn"
+
+    DEFAULT_MODEL: str = "vgg16"
     DECISION_THRESHOLD: float = 0.5
-    
+
     MEDICAL_DISCLAIMER: str = (
-        "RESEARCH PROTOTYPE NOTICE: This system is strictly an academic research and educational demonstration "
-        "investigating deep learning architectures on digitized drawing patterns. It is NOT a cleared or approved "
-        "medical diagnostic device and must NEVER be used for clinical diagnosis, treatment decisions, or patient triage. "
-        "Clinical evaluation requires a board-certified neurologist."
+        "INVESTIGATIONAL NOTICE: NeuroSpiral is a research prototype for computer vision "
+        "pattern analysis on digitized drawing examinations. It is NOT a certified medical "
+        "diagnostic device and must not be used for standalone clinical diagnosis."
     )
 
 
 settings = Settings()
-
