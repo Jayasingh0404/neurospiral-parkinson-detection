@@ -1,0 +1,27 @@
+# Python & Virtual Environments
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# Keras local weight cache (large ImageNet downloads)
+.keras/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS & Editor
+.DS_Store
+**/.DS_Store
+ml/data/raw/__MACOSX/
+.vscode/
+.idea/
+*.log
+.env
+.env.local

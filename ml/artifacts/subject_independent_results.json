@@ -1,0 +1,9 @@
+{
+  "custom_cnn": {
+    "mean_accuracy": 0.4381,
+    "std_accuracy": 0.0614,
+    "mean_recall": 0.5667,
+    "mean_specificity": 0.4067,
+    "mean_roc_auc": 0.5313
+  }
+}
