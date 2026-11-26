@@ -22,7 +22,7 @@ interface PredictorPageProps {
 export const PredictorPage: React.FC<PredictorPageProps> = ({ onSaveReport, onOpenReport }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [modelName, setModelName] = useState<string>('vgg16');
+  const [modelName, setModelName] = useState<string>('yolo11');
   const [threshold, setThreshold] = useState<number>(0.5);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -208,9 +208,10 @@ export const PredictorPage: React.FC<PredictorPageProps> = ({ onSaveReport, onOp
               <label className="text-xs text-slate-400 font-medium">Select Model Topology:</label>
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { id: 'custom_cnn', name: 'Custom CNN', desc: 'Trained from scratch (3 blocks)' },
-                  { id: 'vgg16', name: 'VGG16 Transfer', desc: 'Pretrained + Block5 Fine-Tuning' },
-                  { id: 'resnet50', name: 'ResNet50 Transfer', desc: 'Residual base + Frozen BatchNorm' }
+                  { id: 'yolo11', name: 'YOLO11s-cls (Recommended)', desc: 'Ultralytics YOLO11 • 90.0% Acc • 0.900 F1' },
+                  { id: 'vgg16', name: 'VGG16 Transfer', desc: 'Pretrained + Block5 Fine-Tuning • 80.0% Acc' },
+                  { id: 'resnet50', name: 'ResNet50 Transfer', desc: 'Residual base + Frozen BatchNorm • 77.5% Acc' },
+                  { id: 'custom_cnn', name: 'Custom CNN', desc: 'Trained from scratch (3 blocks) • 47.5% Acc' }
                 ].map((m) => (
                   <button
                     key={m.id}

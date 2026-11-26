@@ -1,0 +1,63 @@
+{
+  "dataset_directory": "/Users/jayasinghrajput/PARKINSON/ml/data/raw/Parkinson Disease detection",
+  "task_type": "image_classification",
+  "total_images": 204,
+  "class_distribution": {
+    "healthy": 102,
+    "parkinson": 102
+  },
+  "class_imbalance_ratio": 1.0,
+  "split_distribution": {
+    "train": 133,
+    "valid": 31,
+    "test": 40
+  },
+  "split_by_class": {
+    "train": {
+      "healthy": 64,
+      "parkinson": 69
+    },
+    "valid": {
+      "healthy": 19,
+      "parkinson": 12
+    },
+    "test": {
+      "healthy": 19,
+      "parkinson": 21
+    }
+  },
+  "image_formats": {
+    "JPEG": 204
+  },
+  "color_modes": {
+    "RGB": 204
+  },
+  "width_range_px": [
+    253,
+    512
+  ],
+  "height_range_px": [
+    138,
+    516
+  ],
+  "top_resolutions": {
+    "256x256": 99,
+    "512x305": 5,
+    "512x242": 4,
+    "512x251": 4,
+    "512x168": 3,
+    "512x225": 3,
+    "512x221": 3,
+    "512x353": 3,
+    "512x277": 3,
+    "512x265": 2
+  },
+  "corrupt_images_count": 0,
+  "exact_duplicate_groups_count": 0,
+  "observations": [
+    "Total dataset contains 204 valid RGB images with 0 corrupt files and 0 exact duplicates.",
+    "Overall class balance is exact (imbalance ratio = 1.0: {'healthy': 102, 'parkinson': 102}).",
+    "Image dimensions are non-uniform (256x256 square spirals and ~512px wide rectangular meanders), requiring consistent resizing to 224x224.",
+    "Validation split has mild class skew (19 Healthy vs 12 Parkinson); test split is well-balanced (19 Healthy vs 21 Parkinson)."
+  ]
+}

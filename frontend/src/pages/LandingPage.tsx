@@ -14,7 +14,7 @@ interface Props {
   setActiveTab: (tab: NavTab) => void;
 }
 
-type ArchKey = 'vgg16' | 'resnet50' | 'custom_cnn';
+type ArchKey = 'yolo11' | 'vgg16' | 'resnet50' | 'custom_cnn';
 
 const ARCH_SPECS: Record<
   ArchKey,
@@ -30,6 +30,18 @@ const ARCH_SPECS: Record<
     highlight: string;
   }
 > = {
+  yolo11: {
+    name: 'YOLO11s-cls Transfer Learning',
+    tag: 'Highest Accuracy & F1 Architecture',
+    summary:
+      'Ultralytics YOLO11 Small image classification backbone featuring C3k2 feature blocks and C2PSA spatial attention, pretrained on ImageNet-1K and fine-tuned with AdamW and drawing-safe augmentations.',
+    params: '5,445,570',
+    accuracy: '90.0%',
+    rocAuc: '0.892',
+    brier: '0.097',
+    stages: ['Input 224×224 RGB', 'Conv Stem', 'C3k2 Backbone', 'C2PSA Attention', 'Classify Head (2)'],
+    highlight: 'Achieves 90.0% test accuracy (0.947 precision, 0.947 specificity, 0.900 F1) in a compact 10.5 MB footprint.',
+  },
   vgg16: {
     name: 'VGG16 Transfer Learning',
     tag: 'Top Performing Architecture',
@@ -97,7 +109,7 @@ const PIPELINE_STEPS = [
 ];
 
 export const LandingPage: React.FC<Props> = ({ setActiveTab }) => {
-  const [selectedArch, setSelectedArch] = useState<ArchKey>('vgg16');
+  const [selectedArch, setSelectedArch] = useState<ArchKey>('yolo11');
   const activeSpec = ARCH_SPECS[selectedArch];
 
   return (
@@ -155,10 +167,10 @@ export const LandingPage: React.FC<Props> = ({ setActiveTab }) => {
                 <span className="text-white font-semibold">204</span> HandPD Specimens
               </div>
               <div>
-                <span className="text-white font-semibold">3</span> Deep Architectures
+                <span className="text-white font-semibold">4</span> Deep Architectures
               </div>
               <div>
-                <span className="text-emerald-400 font-semibold">0.895</span> Peak ROC-AUC
+                <span className="text-emerald-400 font-semibold">90.0%</span> Peak Accuracy (YOLO11)
               </div>
             </div>
           </div>
@@ -409,13 +421,13 @@ export const LandingPage: React.FC<Props> = ({ setActiveTab }) => {
               03 / Model Architecture
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              Three Convolutional Paradigms.
+              Four Convolutional Paradigms.
             </h2>
           </div>
 
           {/* Segmented Architecture Switcher */}
           <div className="inline-flex p-1 rounded-full bg-slate-900 border border-slate-800 self-start">
-            {(['vgg16', 'resnet50', 'custom_cnn'] as ArchKey[]).map((key) => (
+            {(['yolo11', 'vgg16', 'resnet50', 'custom_cnn'] as ArchKey[]).map((key) => (
               <button
                 key={key}
                 onClick={() => setSelectedArch(key)}
@@ -425,7 +437,7 @@ export const LandingPage: React.FC<Props> = ({ setActiveTab }) => {
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                {key === 'vgg16' ? 'VGG16' : key === 'resnet50' ? 'ResNet50' : 'Custom CNN'}
+                {key === 'yolo11' ? 'YOLO11s-cls' : key === 'vgg16' ? 'VGG16' : key === 'resnet50' ? 'ResNet50' : 'Custom CNN'}
               </button>
             ))}
           </div>
@@ -550,12 +562,12 @@ export const LandingPage: React.FC<Props> = ({ setActiveTab }) => {
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <h4 className="text-sm font-bold text-white">
-                  Transfer Learning Outperforms Scratch Training by +32.5% Accuracy
+                  YOLO11s-cls Leads at 90.0% Test Accuracy &amp; 0.900 F1-Score
                 </h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Fine-tuned VGG16 achieved 80.0% test accuracy (0.895 ROC-AUC, 0.123 Brier score)
-                  and ResNet50 achieved 77.5% (0.875 ROC-AUC), whereas the Custom CNN trained from
-                  scratch on 133 images remained at 47.5% (0.476 ROC-AUC).
+                  Ultralytics YOLO11s-cls achieved 90.0% test accuracy (0.947 precision, 0.857
+                  recall, 0.947 specificity, 0.892 ROC-AUC), outperforming VGG16 (80.0% / 0.895
+                  AUC), ResNet50 (77.5% / 0.875 AUC), and scratch Custom CNN (47.5% / 0.476 AUC).
                 </p>
               </div>
             </div>

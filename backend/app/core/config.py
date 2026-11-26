@@ -20,11 +20,15 @@ class Settings(BaseModel):
     EDA_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "eda")
     EVAL_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "evaluation")
     EXPLAIN_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "ml", "outputs", "explainability")
+    YOLO11_WEIGHTS_PATH: str = os.path.join(_RESOLVED_BASE_DIR, "yolo11", "outputs", "weights", "best.pt")
+    YOLO11_METRICS_PATH: str = os.path.join(_RESOLVED_BASE_DIR, "yolo11", "outputs", "metrics", "yolo11_metrics.json")
+    YOLO11_CONFIG_PATH: str = os.path.join(_RESOLVED_BASE_DIR, "yolo11", "outputs", "metrics", "yolo11_config.json")
+    YOLO11_EVAL_DIR: str = os.path.join(_RESOLVED_BASE_DIR, "yolo11", "outputs", "evaluation")
 
     ALLOWED_IMAGE_TYPES: list = ["image/jpeg", "image/png", "image/jpg"]
     MAX_UPLOAD_SIZE_BYTES: int = 10 * 1024 * 1024  # 10 MB
 
-    DEFAULT_MODEL: str = "vgg16"
+    DEFAULT_MODEL: str = "yolo11"
     DECISION_THRESHOLD: float = 0.5
 
     MEDICAL_DISCLAIMER: str = (

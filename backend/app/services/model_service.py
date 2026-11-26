@@ -45,16 +45,28 @@ class ModelService:
                 "input_shape": [224, 224, 3],
                 "artifact_file": "resnet50_transfer.keras",
                 "model_type": "resnet50"
+            },
+            "yolo11": {
+                "name": "YOLO11s-cls (Transfer Learning)",
+                "architecture": "Ultralytics YOLO11s-cls (C3k2 + C2PSA Backbone + Classification Head)",
+                "description": "Ultralytics YOLO11 Small image classification network pretrained on ImageNet-1K and fine-tuned with AdamW on spiral drawings.",
+                "input_shape": [224, 224, 3],
+                "artifact_file": settings.YOLO11_WEIGHTS_PATH,
+                "model_type": "yolo11"
             }
         }
         
+    def _resolve_artifact_path(self, model_name: str) -> str:
+        artifact = self.model_configs[model_name]["artifact_file"]
+        return artifact if os.path.isabs(artifact) else os.path.join(settings.ARTIFACTS_DIR, artifact)
+
     def get_available_models(self) -> Dict[str, Any]:
         """Lists metadata and availability for all models."""
         models_info = []
         metrics_dict = self.get_evaluation_metrics().get("models", {})
         
         for m_id, cfg in self.model_configs.items():
-            path = os.path.join(settings.ARTIFACTS_DIR, cfg["artifact_file"])
+            path = self._resolve_artifact_path(m_id)
             is_trained = os.path.exists(path)
             model_eval = metrics_dict.get(m_id, {})
             
@@ -75,8 +87,8 @@ class ModelService:
             
         return {"models": models_info, "default_model": settings.DEFAULT_MODEL}
         
-    def load_model(self, model_name: str) -> keras.Model:
-        """Loads and caches model in memory."""
+    def load_model(self, model_name: str) -> Any:
+        """Loads and caches model in memory (Keras or Ultralytics YOLO11)."""
         model_name = model_name.lower()
         if model_name not in self.model_configs:
             raise ValueError(f"Unknown model '{model_name}'. Choose from: {list(self.model_configs.keys())}")
@@ -84,20 +96,25 @@ class ModelService:
         if model_name in self.loaded_models:
             return self.loaded_models[model_name]
             
-        artifact_path = os.path.join(settings.ARTIFACTS_DIR, self.model_configs[model_name]["artifact_file"])
+        artifact_path = self._resolve_artifact_path(model_name)
         if not os.path.exists(artifact_path):
             raise FileNotFoundError(
-                f"Model file '{artifact_path}' not found. Please run 'python -m ml.scripts.train_models' first."
+                f"Model file '{artifact_path}' not found."
             )
             
         print(f"Loading model '{model_name}' from: {artifact_path}")
-        model = keras.models.load_model(artifact_path, compile=False)
+        if self.model_configs[model_name]["model_type"] == "yolo11":
+            os.environ.setdefault("YOLO_CONFIG_DIR", "/tmp/ultralytics_config")
+            from ultralytics import YOLO
+            model = YOLO(artifact_path)
+        else:
+            model = keras.models.load_model(artifact_path, compile=False)
         self.loaded_models[model_name] = model
         return model
         
     def predict_image(self,
                       image_bytes: bytes,
-                      model_name: str = "custom_cnn",
+                      model_name: str = "yolo11",
                       threshold: float = 0.5) -> Dict[str, Any]:
         """Runs validated inference on an uploaded image."""
         model_name = model_name.lower()
@@ -111,13 +128,23 @@ class ModelService:
         except Exception as e:
             raise ValueError(f"Invalid or corrupted image format: {str(e)}")
             
-        # Standardize and letterbox
-        input_tensor, letterboxed = prepare_image(pil_img, target_size=(224, 224), model_type=model_type, augment=False)
-        
-        # Inference
-        t0 = time.time()
-        raw_prob = float(model.predict(input_tensor, verbose=0)[0][0])
-        inf_latency_ms = round((time.time() - t0) * 1000.0, 2)
+        if model_type == "yolo11":
+            letterboxed = letterbox_image(pil_img, target_size=(224, 224))
+            t0 = time.time()
+            res = model.predict(source=pil_img, imgsz=224, verbose=False)[0]
+            inf_latency_ms = round((time.time() - t0) * 1000.0, 2)
+            names = {int(k): v.lower() for k, v in res.names.items()}
+            probs = res.probs.data.cpu().numpy()
+            p_idx = [idx for idx, name in names.items() if name == "parkinson"][0]
+            raw_prob = float(probs[p_idx])
+        else:
+            # Standardize and letterbox
+            input_tensor, letterboxed = prepare_image(pil_img, target_size=(224, 224), model_type=model_type, augment=False)
+            
+            # Inference
+            t0 = time.time()
+            raw_prob = float(model.predict(input_tensor, verbose=0)[0][0])
+            inf_latency_ms = round((time.time() - t0) * 1000.0, 2)
         
         predicted_class = "parkinson" if raw_prob >= threshold else "healthy"
         prediction_label = "Parkinson's Disease Pattern Detected" if predicted_class == "parkinson" else "Healthy Control Pattern Detected"
@@ -204,6 +231,39 @@ class ModelService:
         if os.path.exists(models_eval_path):
             with open(models_eval_path) as f:
                 results["models"] = json.load(f)
+
+        # Merge YOLO11s-cls verified test metrics if available
+        if os.path.exists(settings.YOLO11_METRICS_PATH):
+            with open(settings.YOLO11_METRICS_PATH) as f:
+                y_data = json.load(f)
+            y_cfg = {}
+            if os.path.exists(settings.YOLO11_CONFIG_PATH):
+                with open(settings.YOLO11_CONFIG_PATH) as f:
+                    y_cfg = json.load(f)
+            y_test = y_data.get("test", {})
+            results["models"]["yolo11"] = {
+                "accuracy": y_test.get("accuracy", 0.0),
+                "precision": y_test.get("precision", 0.0),
+                "recall": y_test.get("recall", 0.0),
+                "sensitivity": y_test.get("sensitivity", y_test.get("recall", 0.0)),
+                "specificity": y_test.get("specificity", 0.0),
+                "f1": y_test.get("f1_score", 0.0),
+                "balanced_accuracy": y_test.get("balanced_accuracy", 0.0),
+                "roc_auc": y_test.get("roc_auc", 0.0),
+                "pr_auc": y_test.get("pr_auc", 0.0),
+                "mcc": y_test.get("mcc", 0.0),
+                "brier_score": y_test.get("brier_score", 0.0),
+                "confusion_matrix": y_test.get("confusion_matrix", {}),
+                "threshold": y_test.get("threshold", 0.5),
+                "sample_count": y_test.get("sample_count", 40),
+                "total_params": y_cfg.get("total_params"),
+                "trainable_params": y_cfg.get("trainable_params"),
+                "train_time_sec": y_cfg.get("train_time_sec"),
+                "inference_latency_ms": y_test.get("inference_latency_ms"),
+                "model_size_mb": y_cfg.get("model_size_mb"),
+                "roc_curve": {"fpr": [], "tpr": []},
+                "pr_curve": {"recall": [], "precision": []},
+            }
                 
         if os.path.exists(subj_indep_path):
             with open(subj_indep_path) as f:

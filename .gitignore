@@ -11,6 +11,12 @@ __pycache__/
 # Keras local weight cache (large ImageNet downloads)
 .keras/
 
+# YOLO11 local base weight cache, symlink view & raw run logs (keep trained outputs/weights/best.pt, metrics & plots)
+yolo11/weights/
+yolo11/dataset_view/
+yolo11/outputs/runs/
+yolo11/outputs/weights/last.pt
+
 # Node / Frontend
 frontend/node_modules/
 frontend/dist/
@@ -25,3 +31,4 @@ ml/data/raw/__MACOSX/
 *.log
 .env
 .env.local
+

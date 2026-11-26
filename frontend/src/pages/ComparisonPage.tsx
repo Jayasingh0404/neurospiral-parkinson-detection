@@ -64,9 +64,10 @@ export const ComparisonPage: React.FC = () => {
             <thead>
               <tr className="border-b border-slate-800 bg-slate-900/80 text-slate-400 font-mono text-[11px]">
                 <th className="py-3.5 px-4 font-semibold">Evaluation Metric</th>
-                <th className="py-3.5 px-4 font-semibold text-sky-400">CUSTOM CNN (SCRATCH)</th>
+                <th className="py-3.5 px-4 font-semibold text-amber-400">YOLO11s-CLS ★</th>
                 <th className="py-3.5 px-4 font-semibold text-emerald-400">VGG16 TRANSFER</th>
                 <th className="py-3.5 px-4 font-semibold text-purple-400">RESNET50 TRANSFER</th>
+                <th className="py-3.5 px-4 font-semibold text-sky-400">CUSTOM CNN (SCRATCH)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 font-mono">
@@ -88,11 +89,11 @@ export const ComparisonPage: React.FC = () => {
               ].map((row, idx) => (
                 <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
                   <td className="py-3 px-4 text-slate-300 font-sans font-medium">{row.label}</td>
-                  {['custom_cnn', 'vgg16', 'resnet50'].map((mKey) => {
+                  {['yolo11', 'vgg16', 'resnet50', 'custom_cnn'].map((mKey) => {
                     const mData = models[mKey];
                     const val = mData ? (mData as any)[row.key] : null;
                     return (
-                      <td key={mKey} className="py-3 px-4 font-bold text-slate-200">
+                      <td key={mKey} className={`py-3 px-4 font-bold ${mKey === 'yolo11' ? 'text-amber-300' : 'text-slate-200'}`}>
                         {val !== undefined && val !== null ? row.format(val) : '—'}
                       </td>
                     );
@@ -112,10 +113,10 @@ export const ComparisonPage: React.FC = () => {
         </h3>
         <div className="flex items-center justify-center p-2 bg-slate-950/60 rounded-2xl border border-slate-800">
           <img 
-            src={`${API_ORIGIN}/static/evaluation/01_grouped_metrics_bar.png`} 
-            alt="Grouped Metrics Bar Chart" 
+            src={`${API_ORIGIN}/static/yolo11/08_model_comparison.png`} 
+            alt="Grouped Metrics Bar Chart Comparing YOLO11, VGG16, ResNet50, and Custom CNN" 
             className="max-h-[450px] w-auto rounded-lg shadow-lg"
-            onError={(e) => { (e.target as any).style.display = 'none'; }}
+            onError={(e) => { (e.target as any).src = `${API_ORIGIN}/static/evaluation/01_grouped_metrics_bar.png`; }}
           />
         </div>
       </div>

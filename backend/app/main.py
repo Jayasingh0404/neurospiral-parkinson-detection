@@ -41,6 +41,8 @@ for path_dir in [settings.EDA_DIR, settings.EVAL_DIR, settings.EXPLAIN_DIR]:
 
 app.mount("/static/eda", StaticFiles(directory=settings.EDA_DIR), name="eda_plots")
 app.mount("/static/evaluation", StaticFiles(directory=settings.EVAL_DIR), name="evaluation_plots")
+if os.path.isdir(settings.YOLO11_EVAL_DIR):
+    app.mount("/static/yolo11", StaticFiles(directory=settings.YOLO11_EVAL_DIR), name="yolo11_plots")
 
 # Serve compiled React Frontend in production if frontend/dist exists
 FRONTEND_DIST = os.path.join(settings.BASE_DIR, "frontend", "dist")

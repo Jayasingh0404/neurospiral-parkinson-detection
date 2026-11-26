@@ -13,19 +13,27 @@ import {
 export const AboutPage: React.FC = () => {
   const architectures = [
     {
-      name: 'VGG16 Transfer Learning',
-      status: 'Primary Production Model',
-      params: '14.7M parameters',
-      desc: '13-layer deep convolutional feature extractor pretrained on ImageNet. Fine-tuned with two-phase block5 adaptation for micro-stroke tremor detection.',
-      badge: 'Best Accuracy & AUC',
+      name: 'YOLO11s-cls Transfer Learning',
+      status: 'Top Accuracy Model',
+      params: '5.45M parameters',
+      desc: 'Ultralytics YOLO11 Small classification network with C3k2 blocks and C2PSA attention. Achieves 90.0% test accuracy and 0.900 F1-score in a compact 10.5 MB model.',
+      badge: '90.0% Acc • Best Overall',
       color: 'emerald'
+    },
+    {
+      name: 'VGG16 Transfer Learning',
+      status: 'Peak ROC-AUC Model',
+      params: '14.7M parameters',
+      desc: '13-layer deep convolutional feature extractor pretrained on ImageNet. Fine-tuned with two-phase block5 adaptation (80.0% accuracy, 0.895 ROC-AUC).',
+      badge: '0.895 Peak ROC-AUC',
+      color: 'sky'
     },
     {
       name: 'ResNet50 Residual Architecture',
       status: 'Deep Residual Benchmark',
       params: '23.6M parameters',
       desc: '50-layer deep architecture featuring residual bottleneck identity mappings. Fine-tuned with frozen BatchNormalization layers to preserve feature stability.',
-      badge: 'High Residual Stability',
+      badge: '77.5% Acc • Residual',
       color: 'sky'
     },
     {
@@ -33,7 +41,7 @@ export const AboutPage: React.FC = () => {
       status: 'Baseline Scratch Model',
       params: '102K parameters',
       desc: 'Lightweight convolutional network with Batch Normalization, Max Pooling, and Global Average Pooling trained directly on drawing patterns.',
-      badge: 'Ultra-Fast Scratch Model',
+      badge: 'Scratch Baseline',
       color: 'purple'
     }
   ];

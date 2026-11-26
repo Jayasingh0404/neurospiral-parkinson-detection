@@ -1,0 +1,10 @@
+YOLO11s-cls Independent Test Set Classification Report
+==========================================================
+              precision    recall  f1-score   support
+
+     healthy     0.8571    0.9474    0.9000        19
+   parkinson     0.9474    0.8571    0.9000        21
+
+    accuracy                         0.9000        40
+   macro avg     0.9023    0.9023    0.9000        40
+weighted avg     0.9045    0.9000    0.9000        40

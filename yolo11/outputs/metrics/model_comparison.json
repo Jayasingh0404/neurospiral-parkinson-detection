@@ -1,0 +1,46 @@
+[
+  {
+    "Model":"CUSTOM_CNN",
+    "Accuracy":0.475,
+    "Precision":0.0,
+    "Recall":0.0,
+    "Specificity":1.0,
+    "F1-score":0.0,
+    "ROC-AUC":0.4762,
+    "Parameters":102465,
+    "Inference Latency (ms)":11.15
+  },
+  {
+    "Model":"VGG16",
+    "Accuracy":0.8,
+    "Precision":0.8095,
+    "Recall":0.8095,
+    "Specificity":0.7895,
+    "F1-score":0.8095,
+    "ROC-AUC":0.8947,
+    "Parameters":14715201,
+    "Inference Latency (ms)":170.21
+  },
+  {
+    "Model":"RESNET50",
+    "Accuracy":0.775,
+    "Precision":0.8,
+    "Recall":0.7619,
+    "Specificity":0.7895,
+    "F1-score":0.7805,
+    "ROC-AUC":0.8747,
+    "Parameters":23589761,
+    "Inference Latency (ms)":77.86
+  },
+  {
+    "Model":"YOLO11s-cls",
+    "Accuracy":0.9,
+    "Precision":0.9474,
+    "Recall":0.8571,
+    "Specificity":0.9474,
+    "F1-score":0.9,
+    "ROC-AUC":0.8922,
+    "Parameters":5445570,
+    "Inference Latency (ms)":10.71
+  }
+]
